@@ -350,3 +350,5 @@ MigrationBackup/
 
 /ecmCredentials.json
 /ftpCredentials.json
+/AirTableConsole/airtableCredentials.json
+/AirTableConsole/appSettings.json
