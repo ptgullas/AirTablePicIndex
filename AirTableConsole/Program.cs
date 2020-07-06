@@ -97,9 +97,6 @@ namespace AirTableConsole {
                 return null;
             }
             else {
-                foreach (string id in ids) {
-                    Console.WriteLine(id);
-                }
                 return ids;
             }
         }
