@@ -73,6 +73,9 @@ namespace AirTableConsole {
             dateOptions.LastDateNonInclusive = dateOptionsSection.GetValue<DateTime>("lastDateInclusive")
                                                                  .AddMonths(1);
 
+            if (dateOptions.FirstDateNonInclusive >= dateOptions.LastDateNonInclusive) {
+                throw new ArgumentOutOfRangeException("First Date should be before Last Date");
+            }
             return dateOptions;
         }
 
