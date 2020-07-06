@@ -88,10 +88,12 @@ namespace AirTableConsole {
 
                 MagazineIssueDate issueDate = new MagazineIssueDate(dateOptions.FirstDateNonInclusive);
 
-                while (idArrayCounter < idArray.Count()) {
-                    issueDate.IncrementMonth();
-                    await AddCoverToRecord(retriever, idArray[idArrayCounter], issueDate);
-                    idArrayCounter++;
+                if (PromptForConfirmation(idArray.Count())) {
+                    while (idArrayCounter < idArray.Count()) {
+                        issueDate.IncrementMonth();
+                        await AddCoverToRecord(retriever, idArray[idArrayCounter], issueDate);
+                        idArrayCounter++;
+                    }
                 }
             }
         }
@@ -106,6 +108,17 @@ namespace AirTableConsole {
             }
             else {
                 return ids;
+            }
+        }
+
+        static bool PromptForConfirmation(int numberOfRecords) {
+            Console.WriteLine($"Continue with adding attachments for {numberOfRecords} records?");
+            string userInput = Console.ReadLine().ToUpper();
+            if (userInput == "Y") {
+                return true;
+            }
+            else {
+                return false;
             }
         }
 
