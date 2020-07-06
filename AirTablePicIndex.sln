@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirTablePicIndex", "AirTablePicIndex\AirTablePicIndex.csproj", "{EC8C390A-E6E5-4D46-8CCC-AEA6A992C00D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirTableConsole", "AirTableConsole\AirTableConsole.csproj", "{B8833EDB-68EC-431B-BF97-D8B47B2E3151}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirTableConsole.Tests", "AirTableConsole.Tests\AirTableConsole.Tests.csproj", "{7EED17C9-FDFA-428F-B49A-EE2E6DAD63B0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EC8C390A-E6E5-4D46-8CCC-AEA6A992C00D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC8C390A-E6E5-4D46-8CCC-AEA6A992C00D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC8C390A-E6E5-4D46-8CCC-AEA6A992C00D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC8C390A-E6E5-4D46-8CCC-AEA6A992C00D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8833EDB-68EC-431B-BF97-D8B47B2E3151}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8833EDB-68EC-431B-BF97-D8B47B2E3151}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8833EDB-68EC-431B-BF97-D8B47B2E3151}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8833EDB-68EC-431B-BF97-D8B47B2E3151}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EED17C9-FDFA-428F-B49A-EE2E6DAD63B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EED17C9-FDFA-428F-B49A-EE2E6DAD63B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EED17C9-FDFA-428F-B49A-EE2E6DAD63B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EED17C9-FDFA-428F-B49A-EE2E6DAD63B0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C71869FD-EBCD-4A04-9D86-8AC1411AB377}
+	EndGlobalSection
+EndGlobal
