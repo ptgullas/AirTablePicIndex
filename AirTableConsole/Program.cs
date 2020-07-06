@@ -91,8 +91,10 @@ namespace AirTableConsole {
                 if (PromptForConfirmation(idArray.Count())) {
                     while (idArrayCounter < idArray.Count()) {
                         issueDate.IncrementMonth();
-                        await AddCoverToRecord(retriever, idArray[idArrayCounter], issueDate);
-                        idArrayCounter++;
+                        if (!issueDate.IsSkipMonth()) {
+                            await AddCoverToRecord(retriever, idArray[idArrayCounter], issueDate);
+                            idArrayCounter++;
+                        }
                     }
                 }
             }
@@ -136,6 +138,7 @@ namespace AirTableConsole {
         }
 
         static async Task AddCoverToRecord(Retriever retriever, string recordId, MagazineIssueDate issueDate) {
+
             string coverUrl = GenerateMagazineCoverUrl(issueDate);
             Console.WriteLine($"coverUrl is {coverUrl}");
             string tableName = "Issues";
