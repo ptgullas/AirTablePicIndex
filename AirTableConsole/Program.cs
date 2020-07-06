@@ -67,7 +67,12 @@ namespace AirTableConsole {
         private static DateOptions GetDateOptions() {
             DateOptions dateOptions = new DateOptions();
             IConfigurationSection dateOptionsSection = Configuration.GetSection("dateOptions");
-            ConfigurationBinder.Bind(dateOptionsSection, dateOptions);
+
+            dateOptions.FirstDateNonInclusive = dateOptionsSection.GetValue<DateTime>("firstDateInclusive")
+                                                                  .AddMonths(-1);
+            dateOptions.LastDateNonInclusive = dateOptionsSection.GetValue<DateTime>("lastDateInclusive")
+                                                                 .AddMonths(1);
+
             return dateOptions;
         }
 
