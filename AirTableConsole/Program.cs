@@ -103,7 +103,11 @@ namespace AirTableConsole {
         static async Task<List<string>> GetIdsForIssuesInTimeRange(Retriever retriever, DateOptions dateOptions, string tableName) {
             string formula = GenerateTimeRangeFormula(dateOptions);
             Console.WriteLine($"Retrieving Ids for Issues between {dateOptions.FirstDateNonInclusive} & {dateOptions.LastDateNonInclusive} (non-inclusive)");
-            (bool success, string errorMessage, var ids) = await retriever.GetIdsFromRecordsFilterByFormula(tableName, formula);
+
+            List<string> fields = new List<string>() {
+                "Date"
+            };
+            (bool success, string errorMessage, var ids) = await retriever.GetIdsFromRecordsFilterByFormula(tableName, formula, fields);
             if (!success) {
                 Console.WriteLine(errorMessage);
                 return null;
@@ -128,8 +132,8 @@ namespace AirTableConsole {
             DateTime firstDate = dateOptions.FirstDateNonInclusive;
             DateTime lastDate = dateOptions.LastDateNonInclusive;
 
-            string lastDateformula = $"IS_BEFORE(Date,'{lastDate:yyyy-MM-dd}')";
             string firstDateFormula = $"IS_AFTER(Date, '{firstDate:yyyy-MM-dd}')";
+            string lastDateformula = $"IS_BEFORE(Date,'{lastDate:yyyy-MM-dd}')";
             string formula = $"AND({firstDateFormula}, {lastDateformula})";
 
             Console.WriteLine($"formula is {formula}");

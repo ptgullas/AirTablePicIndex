@@ -77,15 +77,12 @@ namespace AirTablePicIndex {
             return jsonRecords;
         }
 
-        public async Task<(bool, string, List<string>)> GetIdsFromRecordsFilterByFormula(string table, string formula) {
+        public async Task<(bool, string, List<string>)> GetIdsFromRecordsFilterByFormula(string table, string formula, List<string> fields) {
             string offset = null;
             string errorMessage = null;
             bool success = false;
             var records = new List<AirtableRecord>();
             AirtableRecord myRecord = new AirtableRecord();
-            List<string> fields = new List<string>() {
-                "Date"
-            };
 
             using (AirtableBase airtableBase = new AirtableBase(ApiKey, BaseId)) {
                 Task<AirtableListRecordsResponse> task = airtableBase.ListRecords(
