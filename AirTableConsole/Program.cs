@@ -1,9 +1,12 @@
 ﻿using AirTableConsole.Options;
 using AirTablePicIndex;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace AirTableConsole {
@@ -19,12 +22,14 @@ namespace AirTableConsole {
             Retriever retriever = new Retriever(airtableCredentials.BaseId, airtableCredentials.ApiKey);
 
             string tableName = Configuration.GetSection("airtableOptions").GetValue<string>("tableName");
-            Console.WriteLine($"tableName is {tableName}");
 
             DateOptions dateOptions = GetDateOptions();
             Console.WriteLine($"Date1 is {dateOptions.FirstDateNonInclusive}. Date2 is {dateOptions.LastDateNonInclusive}");
 
-            await AddCoversToIssuesInTimeRange(retriever, dateOptions, tableName);
+            await DownloadAllCovers(retriever, @"c:\temp\MagCovers", tableName);
+
+            /* Add Covers to Issues within a Time Range */
+            // await AddCoversToIssuesInTimeRange(retriever, dateOptions, tableName);
 
             // /* Get a single record */
             //string recordId = "recDDgkAWOdzhugCS";
@@ -78,6 +83,67 @@ namespace AirTableConsole {
             }
             return dateOptions;
         }
+
+        static async Task DownloadAllCovers(Retriever retriever, string targetFolder, string tableName) {
+            DateTime year1 = new DateTime(1981, 1, 1);
+            DateTime year2 = new DateTime(1981, 12, 1);
+            DateTime finalDate = new DateTime(2018, 1, 1);
+
+            DateOptions dateOptions = new DateOptions() {
+                FirstDateNonInclusive = year1.AddMonths(-1),
+                LastDateNonInclusive = year2.AddMonths(1)
+            };
+
+            var serviceProvider = new ServiceCollection().AddHttpClient().BuildServiceProvider();
+            var httpClientFactory = serviceProvider.GetService<IHttpClientFactory>();
+            var httpClient = httpClientFactory.CreateClient();
+
+            while (dateOptions.FirstDateNonInclusive < finalDate) {
+                
+                List<(string, string)> idsAndUrls = await GetIdsAndCoverUrlsForIssuesInTimeRange(retriever, dateOptions, tableName);
+                foreach ((_, string url) in idsAndUrls) {
+                    await DownloadAndSaveAttachment(httpClient, targetFolder, url);
+                }
+                
+                // download attachment
+                // add 1 year to dateOptions dates
+                dateOptions.FirstDateNonInclusive = dateOptions.FirstDateNonInclusive.AddYears(1);
+                dateOptions.LastDateNonInclusive = dateOptions.LastDateNonInclusive.AddYears(1);
+                Console.WriteLine($"{dateOptions.FirstDateNonInclusive}. {dateOptions.LastDateNonInclusive}");
+            }
+        }
+
+        static async Task DownloadAndSaveAttachment(HttpClient httpClient, string targetFolder, string url) {
+            if (!Directory.Exists(targetFolder)) {
+                Directory.CreateDirectory(targetFolder);
+            }
+            Uri uri = new Uri(url);
+            string fileName = Path.GetFileName(uri.LocalPath);
+
+            string targetPath = Path.Combine(targetFolder, fileName);
+
+            var imageBytes = await httpClient.GetByteArrayAsync(uri);
+            await File.WriteAllBytesAsync(targetPath, imageBytes);
+            Console.WriteLine($"Saved file {targetPath}");
+        }
+
+        static async Task<List<(string, string)>> GetIdsAndCoverUrlsForIssuesInTimeRange(Retriever retriever, DateOptions dateOptions, string tableName) {
+            string formula = GenerateTimeRangeFormula(dateOptions);
+            Console.WriteLine($"Retrieving Ids for Issues between {dateOptions.FirstDateNonInclusive} & {dateOptions.LastDateNonInclusive} (non-inclusive)");
+
+            List<string> fields = new List<string>() {
+                "Date", "Cover"
+            };
+            (bool success, string errorMessage, List<(string, string)> idsAndUrls) = await retriever.GetIdsAndAttachmentUrlsFromRecordsFilterByFormula(tableName, formula, fields);
+            if (!success) {
+                Console.WriteLine(errorMessage);
+                return null;
+            }
+            else {
+                return idsAndUrls;
+            }
+        }
+
 
 
         static async Task AddCoversToIssuesInTimeRange(Retriever retriever, DateOptions dateOptions, string tableName) {
