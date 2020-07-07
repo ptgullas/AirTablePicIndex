@@ -12,10 +12,6 @@ namespace AirTableConsole.Options {
         public DateTime FirstDateNonInclusive { get; set; }
         public DateTime LastDateNonInclusive { get; set; }
 
-        public void IncrementYear() {
-            FirstDateNonInclusive.AddYears(1);
-            LastDateNonInclusive.AddYears(1);
-        }
     }
-    }
+}
 
